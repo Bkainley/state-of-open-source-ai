@@ -71,7 +71,7 @@ The choice of toolkit should be based on the requirements of the application: da
 LangChain
 ---------
 
-.. image:: https://python.langchain.com/img/parrot-chainlink-icon.png
+.. image:: https://docs.langchain.com/img/brand/wordmark.png
    :alt: LangChain logo
    :align: center
 
