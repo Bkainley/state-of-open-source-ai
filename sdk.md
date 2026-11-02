@@ -1,204 +1,213 @@
-# Software Development toolKits
+Software Development Toolkits
+=============================
 
-{term}`LLM` SDKs are specific for generative AI. These toolkits help developers integrate LLM capabilities into applications. The LLM SDK typically includes APIs, sample code, and documentation to aid in the development process. By leveraging an LLM SDK, developers can streamline their development processes and ensure compliance with industry standards.
+{term}`LLM` software development kits (SDKs) and frameworks help developers integrate generative AI capabilities into applications. They commonly provide model-provider interfaces, reusable components, integrations, examples, and documentation. Their scope varies: some focus on application orchestration, some on data ingestion and retrieval, and others on routing requests across model providers.
 
-% TODO: haystack?
+An SDK or framework can reduce boilerplate, but it does not automatically ensure legal compliance, security, reliability, or production readiness. These depend on implementation, provider terms, data handling, testing, and operational controls.
 
-```{table} Comparison of LLM SDKs
-:name: llm-sdks
-SDK | Use cases | Vector stores | Embedding model | LLM Model | Languages | Features
-----|-----------|---------------|-----------------|-----------|-----------|----------
-[](#langchain) | Chatbots, prompt chaining, document related tasks | Comprehensive list of data sources available to get connected readily | State of art embedding models in the bucket to choose from | A-Z availability of LLMs out there in the market | Python, Javascript, Typescript | Open source & 1.5k+ contributors strong for active project development
-[](#llama-index) | Connecting multiple data sources to LLMs, document query interface using retrieval augmented generation, advanced chatbots, structured analytics | Wide options to connect & facility to [create a new one](https://docs.llamaindex.ai/en/latest/examples/vector_stores/CognitiveSearchIndexDemo.html#create-index-if-it-does-not-exist) | Besides the 3 commonly available models we can use a [custom embedding model](https://docs.llamaindex.ai/en/latest/examples/embeddings/custom_embeddings.html) as well | Set of restricted availability of LLM models besides [customised abstractions](https://docs.llamaindex.ai/en/latest/module_guides/models/llms/usage_custom.html) suited for your custom data | Python, Javascript, Typescript | Tailor-made for high customisations if not happy with the current parameters and integrations
-[](#litellm) | Integrating multiple LLMs, evaluating LLMs | Not Applicable | Currently supports only `text-embedding-ada-002` from OpenAI & Azure | Expanding the list of LLM providers with the most commonly used ones ready for use | Python | Lightweight, streaming model response, consistent output response
-```
+.. _llm-sdks:
 
-{{ table_feedback }}
+Comparison of LLM SDKs
+----------------------
 
-```{seealso}
-[awesome-transformers](https://github.com/huggingface/transformers/blob/main/awesome-transformers.md)
-```
+.. list-table::
+   :header-rows: 1
+   :widths: 15 24 22 22 22 14 30
 
-A few reasons for why there is a need for LLM SDKs in this current era of AI.
+   * - SDK / framework
+     - Typical use cases
+     - Data and retrieval
+     - Model support
+     - Languages
+     - Primary strengths
+     - Considerations
+   * - `LangChain <https://www.langchain.com/>`_
+     - Tool-using agents and LLM applications
+     - Integrations with document loaders, retrievers, and vector stores
+     - Broad model-provider integrations
+     - Python, JavaScript / TypeScript
+     - Fast application development, model and tool abstractions, middleware
+     - For complex stateful workflows, consider LangGraph; abstraction choices should be evaluated against application needs
+   * - `LlamaIndex <https://www.llamaindex.ai/>`_
+     - Data-centric LLM applications, RAG, search, and agents over private or domain-specific data
+     - Data connectors, indexing, retrieval, reranking, and query workflows
+     - Multiple providers through integrations and configurable model interfaces
+     - Python, TypeScript
+     - Strong focus on data ingestion, retrieval, and context construction
+     - Retrieval quality and production behavior depend on data preparation, evaluation, and deployment design
+   * - `LiteLLM <https://www.litellm.ai/>`_
+     - Unified access to model providers; routing and gateway operations
+     - Embedding endpoints and provider integrations; not primarily a RAG framework
+     - Broad provider coverage through a unified interface
+     - Python SDK; OpenAI-compatible gateway usable by many client languages
+     - Common API shape, retries, fallbacks, routing, budgets, and gateway controls
+     - Provider feature parity is not guaranteed; verify parameters and behavior for each model
+   * - `Haystack <https://haystack.deepset.ai/>`_
+     - Modular RAG pipelines, search applications, and agents
+     - Explicit components and pipelines for document stores, retrieval, processing, and generation
+     - Integrations with hosted and local model providers
+     - Python
+     - Composable, inspectable pipelines with a clear distinction between deterministic pipelines and agentic execution
+     - Requires designing and wiring components to fit the application's use case
 
-1. **Compliance with Agreements**: By using an LLM SDK, developers can ensure that their application complies with agreements by logging, tracing, and monitoring requests appropriately. This helps avoid potential legal issues related to software piracy or unauthorised use of resources.
-1. **Improved User Experience**: An LLM SDK can help create a seamless user experience by removing boilerplate code and abstracting lower level interactions with LLMs.
-1. **Increased Security**: By implementing an LLM SDK, developers can protect their resources and prevent unauthorised use of their software by security features such as [access control and user management](https://www.businesswire.com/news/home/20230531005251/en/LlamaIndex-Raises-8.5M-to-Unlock-Large-Language-Models-Capabilities-with-Personal-Data).
-1. **Flexibility**: An LLM SDK provides flexibility in terms of customisation and bringing together different components, allowing developers to tailor the management system to their specific needs and adapt it easily.
-1. **Improved Collaboration**: An LLM SDK can facilitate collaboration among team members by providing a centralised platform for license management, ensuring that everyone is on the same page regarding issues and compliance requirements.
+.. seealso::
 
-## LangChain
+   `Hugging Face Transformers — Awesome Transformers <https://github.com/huggingface/transformers/blob/main/awesome-transformers.md>`_
 
-![banner](https://python.langchain.com/img/parrot-chainlink-icon.png)
+Why use LLM SDKs and frameworks?
+--------------------------------
 
-On the LangChain page -- it states that LangChain is a framework for developing applications powered by Large Language Models(LLMs). It is available as an python sdk and npm packages suited for development purposes.
+LLM SDKs and frameworks can provide several benefits:
 
-### Document Loader
+1. **Less boilerplate and improved developer experience:** Common interactions with models, prompts, tools, and data sources can be implemented through reusable interfaces.
+2. **Flexibility:** Applications can combine providers and components, and may replace individual integrations as requirements change.
+3. **Observability and debugging:** Supported tracing, logging, and evaluation integrations can help developers inspect requests and application behavior. Logging prompts or responses requires careful handling of sensitive data.
+4. **Security controls:** Some frameworks and gateways support authentication, access policies, guardrails, or budget controls. These features must be configured and reviewed; a framework alone does not secure an application.
+5. **Collaboration and maintainability:** Standardized components and documented workflows can make systems easier for teams to understand, test, and maintain.
+6. **Operational support:** Depending on the tool, features such as retries, streaming, routing, and fallbacks can help address common integration concerns.
 
-Well the beauty of LangChain is we can take input from various different files to make it usable for a great extent. Point to be noted is they can be of various [formats](https://python.langchain.com/docs/modules/data_connection/document_loaders) like `.pdf`, `.json`, `.md`, `.html`, and `.csv`.
+The choice of toolkit should be based on the requirements of the application: data and retrieval needs, model-provider flexibility, control over execution, language support, deployment constraints, observability, and maintenance.
 
-### Vector Stores
+LangChain
+---------
 
-After collecting the data they are converted in the form of embeddings for the further use by storing them in any of the vector database.
-Through this way we can perform vector search and retrieve the data from the embeddings that are very much close to the embed query.
+.. image:: https://python.langchain.com/img/parrot-chainlink-icon.png
+   :alt: LangChain logo
+   :align: center
 
-The list of vector stores that LangChain supports can be found [here](https://python.langchain.com/docs/integrations/vectorstores).
+`LangChain <https://www.langchain.com/>`_ is an open-source framework for building LLM applications and agents. It provides model and tool abstractions, integrations, a prebuilt agent loop, and middleware for extending agent behavior. LangChain is available for Python and JavaScript / TypeScript.
 
-### Models
+For custom, stateful workflows that need more direct control over execution, `LangGraph <https://www.langchain.com/langgraph>`_ provides lower-level orchestration primitives. `LangSmith <https://www.langchain.com/langsmith>`_ offers tools for tracing, testing, evaluating, and monitoring applications.
 
-This is the heart of most LLMs, where the core functionality resides. There are broadly [2 different types of models](https://python.langchain.com/docs/modules/model_io) which LangChain integrates with:
+### Models and provider integrations
 
-- **Language**: Inputs & outputs are `string`s
-- **Chat**: Run on top of a Language model. Inputs are a list of chat messages, and output is a chat message
+LangChain offers interfaces for working with chat models and other model types, along with integrations for a range of providers. Model capabilities and supported parameters vary by provider and model. Consult the `LangChain documentation <https://docs.langchain.com/>`_ and the relevant integration reference for current details.
 
-### Tools
+### Retrieval and document processing
 
-[Tools](https://python.langchain.com/docs/modules/agents/tools) are interfaces that an agent uses to interact with the world. They connect real world software products with the power of LLMs. This gives more flexibility, the way we use LangChain and improves its capabilities.
+Applications can load and transform documents, split them into chunks, generate embeddings, and retrieve relevant context from supported vector stores or other retrievers. These components are often used to build retrieval-augmented generation (RAG) systems. Retrieval quality depends on factors such as source quality, chunking, embedding choice, indexing, and retrieval configuration.
 
-### Prompt engineering
+See the current documentation for `document loaders <https://docs.langchain.com/oss/python/integrations/document_loaders>`_ and `vector stores <https://docs.langchain.com/oss/python/integrations/vectorstores>`_.
 
-Prompt engineering is used to generate prompts for the custom prompt template. The custom prompt template takes in a function name and its corresponding source code, and generates an English language explanation of the function.
+### Tools and agents
 
-To create prompts for prompt engineering, the LangChain team uses a custom prompt template called `FunctionExplainerPromptTemplate`. This template takes the function name and source code as input variables and formats them into a prompt. The prompt includes the function name, source code, and an empty explanation section.
-The generated prompt can then be used to guide the language model in generating an explanation for the function.
+Tools expose functions or services that an agent can call, such as searching a database or invoking an API. LangChain's `create_agent` provides a prebuilt agent loop that combines a model with tools. Middleware can be used to add application-specific behavior such as human review, context management, or guardrails.
 
-Overall, prompt engineering is an important aspect of working with language models as it allows us to shape the model's responses and improve its performance in specific tasks.
+Agents can choose actions dynamically, so their behavior, latency, and cost may vary. For tasks requiring a known sequence of steps, a deterministic workflow may be easier to test and control.
 
-More about all the prompts can be found [here](https://python.langchain.com/docs/modules/model_io/prompts).
+### Prompting and structured output
 
-### Advanced features
+Prompt templates help construct model inputs from variables and application context. Structured-output features can guide supported models to return data in a specified schema. Prompts and output schemas should be validated and tested; they do not guarantee correctness.
 
-LangChain provides several advanced features that make it a powerful framework for developing applications powered by language models. Some of the advanced features include:
+### Advanced orchestration
 
-- **Chains**: LangChain provides a standard interface for chains, allowing developers to create sequences of calls that go beyond a single language model call. This enables the chaining together of different components to create more advanced use cases around language models.
-- **Integrations**: LangChain offers integrations with other tools, such as the `requests` and `aiohttp` integrations for tracing HTTP requests to LLM providers, and the `openai` integration for tracing requests to the OpenAI library. These integrations enhance the functionality and capabilities of LangChain.
-- End-to-End Chains: LangChain supports end-to-end chains for common applications. This means that developers can create complete workflows or pipelines that involve multiple steps and components, all powered by language models. This allows for the development of complex and sophisticated language model applications.
-- **Logs and Sampling**: LangChain provides the ability to enable log prompt and completion sampling. By setting the `DD_LANGCHAIN_LOGS_ENABLED=1` environment variable, developers can generate logs containing prompts and completions for a specified sample rate of traced requests. This feature can be useful for debugging and monitoring purposes.
-- **Configuration Options**: LangChain offers various configuration options that allow developers to customize and fine-tune the behaviour of the framework. These configuration options are documented in the APM Python library documentation.
+LangGraph is designed for workflows involving state, branching, persistence, streaming, retries, and human-in-the-loop checkpoints. It can combine deterministic steps with model-driven actions. This is useful when a standard agent loop does not provide sufficient control.
 
-Overall, LangChain's advanced features enable developers to build advanced language model applications with ease and flexibility. Some limitations of LangChain are that while it is useful for rapid prototyping of LLM applications, scalability and deploying in production remains a concern - it might not be particularly useful for handling a large number of users simultaneously, and maintaining low latency.
+LangChain and its ecosystem can accelerate development, but they do not by themselves guarantee scalability, low latency, or production reliability. These properties require application-level testing, deployment design, resource management, and monitoring.
 
-## LLaMA Index
+LlamaIndex
+----------
 
-![banner](https://static.premai.io/book/sdk-llama-index.jpg)
+.. image:: https://static.premai.io/book/sdk-llama-index.jpg
+   :alt: LlamaIndex banner
+   :align: center
 
-LLaMAIndex is a data framework for LLM applications to ingest, structure, and access private or domain-specific data. It provides tools such as data connectors, data indexes, engines (query and chat), and data agents to facilitate natural language access to data. LLaMAIndex is designed for beginners, advanced users, and everyone in between, with a high-level API for easy data ingestion and querying, as well as lower-level APIs for customisation. It can be installed using `pip` and has detailed [documentation](https://docs.llamaindex.ai/en/latest) and tutorials for getting started. LLaMAIndex also has associated projects like https://github.com/run-llama/llama-hub and https://github.com/run-llama/llama-lab.
+`LlamaIndex <https://www.llamaindex.ai/>`_ is a data framework for building LLM applications over private, enterprise, or domain-specific data. Its ecosystem focuses on connecting data sources, preparing and indexing data, retrieving relevant context, and building query, workflow, and agent-based applications. It provides high-level interfaces as well as lower-level components for customization.
 
-### Data connectors
+Refer to the `LlamaIndex documentation <https://docs.llamaindex.ai/>`_ for current packages, APIs, and examples. The project ecosystem and package organization evolve; use current documentation rather than relying on older import paths or examples.
 
-[Data connectors](https://docs.llamaindex.ai/en/latest/module_guides/loading/connector/root.html) are software components that enable the transfer of data between different systems or applications. They provide a way to extract data from a source system, transform it if necessary, and load it into a target system. Data connectors are commonly used in data integration and ETL (Extract, Transform, Load) processes.
+### Data connectors and ingestion
 
-There are various types of data connectors available, depending on the specific systems or applications they connect to. Some common ones include:
+Data connectors (often called readers) bring data into an application from sources such as files, databases, APIs, and enterprise systems. Ingestion workflows may transform documents, extract metadata, split content into nodes or chunks, and send the resulting data to storage or indexes.
 
-- **Database connectors**: These connectors allow data to be transferred between different databases, such as MySQL, PostgreSQL, or Oracle.
-- **Cloud connectors**: These connectors enable data transfer between on-premises systems and cloud-based platforms, such as Amazon Web Services (AWS), Google Cloud Platform (GCP), or Microsoft Azure.
-- **API connectors**: These connectors facilitate data exchange with systems that provide APIs (Application Programming Interfaces), allowing data to be retrieved or pushed to/from those systems.
-- **File connectors**: These connectors enable the transfer of data between different file formats, such as PDF, CSV, JSON, XML, or Excel.
-- **Application connectors**: These connectors are specifically designed to integrate data between different applications, such as CRM (Customer Relationship Management) systems, ERP (Enterprise Resource Planning) systems, or marketing automation platforms.
+A connector is not necessarily an ETL system in the broad sense: its exact responsibilities depend on the integration and configured ingestion pipeline.
 
-Data connectors play a crucial role in enabling data interoperability and ensuring seamless data flow between systems. They simplify the process of data integration and enable organisations to leverage data from various sources for analysis, reporting, and decision-making purposes.
+### Indexing and retrieval
 
-### Data indexes
+LlamaIndex provides components for organizing data and retrieving relevant context. Common RAG designs include vector retrieval, keyword retrieval, metadata filtering, hybrid retrieval, and reranking. The underlying storage may be a vector database, document store, or another supported system.
 
-[Data indexes](https://docs.llamaindex.ai/en/latest/module_guides/indexing/indexing.html) in LLaMAIndex are intermediate representations of data that are structured in a way that is easy and performant for Language Model Models (LLMs) to consume. These indexes are built from documents and serves as the core foundation for retrieval-augmented generation (RAG) use-cases.
-Under the hood, indexes in LLaMAIndex store data in Node objects, which represent chunks of the original documents. These indexes also expose a Retriever interface that supports additional configuration and automation.
-LLaMAIndex provides several types of indexes, including Vector Store Index, Summary Index, Tree Index, Keyword Table Index, Knowledge Graph Index, and SQL Index. Each index has its own specific use case and functionality.
+The best retrieval design depends on the dataset and query patterns. Evaluate relevance, coverage, latency, and cost using representative questions rather than assuming one index type is universally best.
 
-To get started with data indexes in LLaMAIndex, you can use the `from_documents` method to create an index from a collection of documents. Here's an example using the Vector Store Index:
+### Query engines and chat workflows
 
-```python
-from llama_index import VectorStoreIndex
-index = VectorStoreIndex.from_documents(docs)
-```
+Query engines combine retrieval and response synthesis to answer questions over data. Chat-oriented workflows add conversation history or other context to support multi-turn interactions. Current LlamaIndex APIs include configurable components and workflows; exact modes and interfaces may vary by release.
 
-Overall, data indexes in LLaMAIndex play a crucial role in enabling natural language access to data and facilitating question & answer and chat interactions with the data. They provide a structured and efficient way for LLMs to retrieve relevant context for user queries.
+### Agents and tools
 
-### Data engines
+LlamaIndex agents can use model-driven tool calling to search data or invoke external functions. Tools may read information or perform actions, depending on the permissions granted by the application. External actions should be validated and protected with appropriate authorization, confirmation, and audit controls.
 
-Data engines in LLaMAIndex refer to the query engines and chat engines that allow users to interact with their data. These engines are end-to-end pipelines that enable users to ask questions or have conversations with their data. The broad classification of data engines are:
+### Customization and integrations
 
-- [Query engine](https://docs.llamaindex.ai/en/latest/core_modules/query_modules/query_engine/root.html)
-- [Chat engine](https://docs.llamaindex.ai/en/latest/core_modules/query_modules/chat_engines/root.html)
+LlamaIndex offers components for customizing ingestion, retrieval, reranking, response synthesis, and workflow logic. It can be integrated into broader application stacks, but the details depend on the relevant integration and version.
 
-#### Query engine
+LlamaIndex is especially relevant when data ingestion and retrieval are central to the application. It is not inherently “production-ready” merely by being a framework: deployment, security, evaluation, monitoring, and reliability remain application responsibilities.
 
-- Query engines are designed for question and answer interactions with the data.
-- They take in a natural language query and return a response along with the relevant context retrieved from the knowledge base.
-- The LLM (Language Model Model) synthesises the response based on the query and retrieved context.
-- The key challenge in the querying stage is retrieval, orchestration, and reasoning over multiple knowledge bases.
-- LLaMAIndex provides composable modules that help build and integrate RAG (Retrieval-Augmented Generation) pipelines for Q&A.
+LiteLLM
+--------
 
-#### Chat engine
+`LiteLLM <https://www.litellm.ai/>`_ provides a unified interface for calling many LLM providers. Its Python SDK uses a common request and response shape, while the LiteLLM Proxy (Gateway) provides an OpenAI-compatible API endpoint for applications and teams.
 
-- Chat engines are designed for multi-turn conversations with the data.
-- They support back-and-forth interactions instead of a single question and answer.
-- Similar to query engines, chat engines take in natural language input and generate responses using the LLM.
-- The chat engine maintains conversation context and uses it to generate appropriate responses.
-- LLaMAIndex provides different chat modes, such as "condense_question" and "react", to customise the behaviour of chat engines.
+### Unified completions and model access
 
-Both query engines and chat engines can be used to interact with data in various use cases. The main distinction is that query engines focus on single questions and answers, while chat engines enable more dynamic and interactive conversations. These engines leverage the power of LLMs and the underlying indexes to provide relevant and informative responses to user queries.
+LiteLLM offers common interfaces for model calls across providers. This can simplify switching providers or integrating multiple models, but supported features and parameters differ. Check the `provider documentation <https://docs.litellm.ai/docs/providers>`_ for model-specific behavior.
 
-### Data agent
+### Embeddings and other capabilities
 
-[Data Agents](https://docs.llamaindex.ai/en/latest/core_modules/agent_modules/agents/root.html) are LLM-powered knowledge workers in LLaMAIndex that can intelligently perform various tasks over data, both in a "read" and "write" function. They have the capability to perform automated search and retrieval over different types of data, including unstructured, semi-structured, and structured data. Additionally, they can call external service APIs in a structured fashion and process the response, as well as store it for later use.
+LiteLLM includes interfaces for embedding models and supports numerous providers. Its available capabilities extend beyond the older OpenAI and Azure OpenAI-only description. See the current `embedding documentation <https://docs.litellm.ai/docs/embedding/supported_embedding>`_ and provider references.
 
-Data agents go beyond query engines by not only reading from a static source of data but also dynamically ingesting and modifying data from different tools. They consist of two core components: a reasoning loop and tool abstractions. The reasoning loop of a data agent depends on the type of agent being used. LLaMAIndex supports two types of agents:
+### Streaming, routing, and resilience
 
-- OpenAI Function agent: built on top of the OpenAI Function API
-- ReAct agent: which works across any chat/text completion endpoint
+Streaming responses can be enabled where supported by the selected provider and model. LiteLLM's Router can provide load balancing, retries, and fallback behavior across configured deployments.
 
-Tool abstractions are an important part of building a data agent. These abstractions define the set of APIs or tools that the agent can interact with. The agent uses a reasoning loop to decide which tools to use, in what sequence, and the parameters to call each tool.
+### Proxy / Gateway features
 
-To use data agents in LLaMAIndex, you can follow the usage pattern below:
+The self-hosted gateway can provide centralized model access, virtual keys, budgets and cost tracking, and related operational controls. These capabilities can help organizations manage model usage, but they require secure configuration and operational oversight.
 
-```python
-from llama_index.agent import OpenAIAgent
-from llama_index.llms import OpenAI
+LiteLLM is primarily an interoperability and model-access layer. It is complementary to application and RAG frameworks such as LangChain, LlamaIndex, or Haystack rather than a direct replacement for their orchestration or data-processing capabilities.
 
-# Initialise LLM & OpenAI agent
-llm = OpenAI(model="gpt-3.5-turbo-0613")
-agent = OpenAIAgent.from_tools(tools, llm=llm, verbose=True)
-```
+Haystack
+--------
 
-Overall, data agents in LLaMAIndex provide a powerful way to interact with and manipulate data, making them valuable tools for various applications.
+`Haystack <https://haystack.deepset.ai/>`_ is an open-source Python framework for building search, RAG, and agentic AI applications. Its modular architecture is based on reusable components connected into pipelines.
 
-### Advanced features
+### Components and pipelines
 
-LLaMAIndex provides several advanced features that cater to the needs of advanced users. Some of these advanced features include:
+Haystack components handle tasks such as document conversion, preprocessing, embedding, retrieval, routing, generation, and evaluation. Pipelines are explicit graphs that define how data flows between components. They can include branches, loops, and multiple paths, making application logic inspectable and testable.
 
-- **Customisation and Extension**: LLaMAIndex offers lower-level APIs that allow advanced users to customise and extend any module within the framework. This includes data connectors, indices, retrievers, query engines, and re-ranking modules. Users can tailor these components to fit their specific requirements and enhance the functionality of LLaMAIndex.
-- **Data Agents**: LLaMAIndex includes LLM-powered knowledge workers called Data Agents. These agents can intelligently perform various tasks over data, including automated search and retrieval. They can read from and modify data from different tools, making them versatile for data manipulation. Data Agents consist of a reasoning loop and tool abstractions, enabling them to interact with external service APIs and process responses.
-- **Application Integrations**: LLaMAIndex allows for seamless integration with other applications in your ecosystem. Whether it's LangChain, Flask, or ChatGPT, LLaMAIndex can be integrated with various tools and frameworks to enhance its functionality and extend its capabilities.
-- **High-Level API**: LLaMAIndex provides a high-level API that allows beginners to quickly ingest and query their data with just a few lines of code. This user-friendly interface simplifies the process for beginners while still providing powerful functionality.
-- **Modular Architecture**: LLaMAIndex follows a modular architecture, which allows users to understand and work with different components of the framework independently. This modular approach enables users to customise and combine different modules to create tailored solutions for their specific use cases.
+### Document stores and retrieval
 
-LLaMAIndex seems more tailor made for deploying LLM apps in production. However, it remains to be seen how/whether the industry integrates LLaMAIndex in LLM apps, or develop customized methods for LLM data integration.
+Haystack integrates with document stores and retrievers for search and RAG use cases. Developers can select and configure components to match the data source, retrieval strategy, and model provider.
 
-## LiteLLM
+### Agents and tools
 
-![banner](https://litellm.vercel.app/img/docusaurus-social-card.png)
+Haystack also supports agents that use tools and model-driven control flow. A pipeline is generally preferable when the steps are known and predictability matters; an agent is useful when the sequence of actions must be selected dynamically. They can also be combined.
 
-As the name suggests a light package that simplifies the task of getting the responses form multiple APIs at the same time without having to worry about the imports is known as the [LiteLLM](https://litellm.ai). It is available as a python package which can be accessed using `pip` Besides we can test the working of the library using the [playground](https://litellm.ai/playground) that is readily available.
+Haystack is a strong candidate for applications that benefit from explicit, modular pipelines and configurable retrieval. As with other frameworks, production suitability depends on the application's evaluation, security, and deployment practices.
 
-### Completions
+Future and other SDKs
+---------------------
 
-This is similar to OpenAI `create_completion()` [method](https://docs.litellm.ai/docs/completion/input) that allows you to call various available LLMs in the same format. LiteLLMs gives the flexibility to fine-tune the models but there is a catch, only on a few parameters.
-There is also [batch completion](https://docs.litellm.ai/docs/completion/batching) possible which helps us to process multiple prompts simultaneously.
+The LLM tooling ecosystem changes rapidly. New frameworks and provider integrations appear, while APIs, project names, and recommended architectures evolve. Rather than relying on older announcements or speculative roadmaps, compare projects using current documentation, release activity, compatibility, and the needs of the intended application.
 
-### Embeddings & Providers
+Other useful tools include:
 
-There is not much to talk about regarding [embeddings](https://docs.litellm.ai/docs/embedding/supported_embedding) but worth mentioning. We have access to OpenAI and Azure OpenAI embedding models which support `text-embedding-ada-002`.
+- `Hugging Face Transformers <https://huggingface.co/docs/transformers>`_ for loading, training, and running a broad range of transformer models.
+- `Haystack <https://haystack.deepset.ai/>`_ for modular search, RAG, and agent pipelines.
+- `LangGraph <https://www.langchain.com/langgraph>`_ for stateful, controllable agent orchestration.
+- `LiteLLM <https://www.litellm.ai/>`_ for unified provider access and gateway operations.
+- `LlamaIndex <https://www.llamaindex.ai/>`_ for data ingestion, retrieval, and context-focused application development.
 
-However there are many [supported providers](https://docs.litellm.ai/docs/providers), including HuggingFace, Cohere, OpenAI, Replicate, Anthropic, etc.
+### Choosing a toolkit
 
-### Streaming Queries
+There is no universally best LLM SDK. A practical starting point is:
 
-By setting the `stream=True` parameter to boolean `True` we can view the [streaming](https://docs.litellm.ai/docs/completion/stream) iterator response in the output. But this is currently supported for models like OpenAI, Azure, Anthropic, and HuggingFace.
+- Choose **LangChain** for fast development of LLM applications and tool-using agents with broad integrations.
+- Choose **LangGraph** when you need explicit control over complex, stateful agent workflows.
+- Choose **LlamaIndex** when ingesting and retrieving from domain-specific data is a central requirement.
+- Choose **LiteLLM** when you need a common interface, routing, or a gateway across model providers.
+- Choose **Haystack** when you want modular, explicit pipelines for search, RAG, and agentic applications.
+- Choose **Transformers** when your work centers on model loading, inference, fine-tuning, or the Hugging Face model ecosystem.
 
-The idea behind LiteLLM seems neat - the ability to query multiple LLMs using the same logic. However, it remains to be seen how this will impact the industry and what specific use-cases this solves.
+These tools can be combined. For example, an application might use LlamaIndex or Haystack for retrieval, LangGraph for workflow control, and LiteLLM for model-provider routing. Prefer the smallest set of abstractions that meets the requirements, and validate the combination with tests and representative workloads.
 
-## Future And Other SDKs
-
-[](#langchain), [](#llama-index), and [](#litellm) have exciting future plans to unlock high-value LLM applications. [Future initiatives from Langchain](https://blog.langchain.dev/announcing-our-10m-seed-round-led-by-benchmark) include improving the TypeScript package to enable more full-stack and frontend developers to create LLM applications, improved document retrieval, and enabling more observability/experimentation with LLM applications. LlamaIndex is developing an enterprise solution to help remove technical and security barriers for data usage. Apart from the SDKs discussed, there are a variety of newer SDKs for other aspects of integrating LLMs in production. One example is https://github.com/prefecthq/marvin, great for building APIs, data pipelines, and streamlining the AI engineering framework for building natural language interfaces. Another example is https://github.com/homanp/superagent, which is a higher level abstraction and allows for building many AI applications/micro services like chatbots, co-pilots, assistants, etc.
-
-{{ comments }}
+.. comments
